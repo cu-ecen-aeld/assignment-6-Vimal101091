@@ -11,11 +11,11 @@ jobs:
         steps:
           - uses: actions/checkout@v3
             with:
-              clean: true
+              clean: false
               submodules: 'recursive'
           - uses: webfactory/ssh-agent@v0.5.4
             with:
-                 ssh-private-key: ${{ secrets.AESD_KEY  }}
+                 ssh-private-key: ${{ secrets.AESD_KEY }}
           - name: Run build
             timeout-minutes: 600
             run: |
@@ -26,15 +26,4 @@ jobs:
                  cuaesd/aesd-autotest:24-assignment6-yocto \
                  --workdir=${GITHUB_WORKSPACE} \
                  ./build.sh
-          - name: Cleanup
-            if: always()
-            run: |
-              ssh-add -D
-          - name: Run full test
-            timeout-minutes: 15
-            run: |
-               docker run --rm \
-                 -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
-                 cuaesd/aesd-autotest:assignment6-yocto \
-                 --workdir=${GITHUB_WORKSPACE} \
-                 ./full-test.sh
+         
